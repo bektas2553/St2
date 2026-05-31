@@ -1,7 +1,9 @@
 name: iOS Tweak CI
 
 on:
-  workflow_dispatch: # Manuel olarak butona basıp derlemeyi başlatabilmek için
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
