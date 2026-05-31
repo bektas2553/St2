@@ -1,0 +1,35 @@
+name: iOS Tweak CI
+
+on:
+  push:
+    branches: [ "*" ] # Hangi dalda (branch) olursa olsun kod yüklendiğinde otomatik çalıştır
+  workflow_dispatch: # Elle tetikleme butonunu her durumda zorla aktif et
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Depoyu Klonla
+        uses: actions/checkout@v4
+
+      - name: Theos ve iOS SDK Kurulumu
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.4.app
+          export THEOS=/opt/theos
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz
+          tar -xf iPhoneOS14.5.sdk.tar.xz
+          mv iPhoneOS14.5.sdk $THEOS/sdks/
+          rm iPhoneOS14.5.sdk.tar.xz
+
+      - name: Tweak Derleme İşlemi
+        run: |
+          export THEOS=/opt/theos
+          make package FINALPACKAGE=1
+
+      - name: Derlenen Çıktıyı (Dylib) Kaydet
+        uses: actions/upload-artifact@v4
+        with:
+          name: Standoff2ESP-Dylib
+          path: .theos/obj/debug/*.dylib
