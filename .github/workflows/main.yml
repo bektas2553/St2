@@ -2,8 +2,8 @@ name: iOS Tweak CI
 
 on:
   push:
-    branches: [ "main", "master" ]
-  workflow_dispatch:
+    branches: [ "*" ] # Hangi dalda (branch) olursa olsun kod yüklendiğinde otomatik çalıştır
+  workflow_dispatch: # Elle tetikleme butonunu her durumda zorla aktif et
 
 jobs:
   build:
